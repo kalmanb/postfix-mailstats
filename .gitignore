@@ -1,0 +1,14 @@
+bin
+target
+temp
+classes
+export.xml
+*.bak
+*.orig
+.cache
+.project
+.classpath
+.settings
+.lib-src
+*.swp
+tags
