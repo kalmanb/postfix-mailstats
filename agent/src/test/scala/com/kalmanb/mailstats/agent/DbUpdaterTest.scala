@@ -18,7 +18,7 @@ class DbUpdaterTest extends TestSpec {
       updater.underlyingActor.updateSent("domain", "server", "queue", 1)
       updater.underlyingActor.updateSent("domain", "server", "queue", 2)
 
-      val results = testGet("domain", "server", "queue")
+      val results = getSent("domain", "server", "queue")
       results.size should be(2)
       results(0).getInt("sent") should be(1)
       results(1).getInt("sent") should be(2)
@@ -27,9 +27,8 @@ class DbUpdaterTest extends TestSpec {
     }
   }
 
-  def testGet(fromDomain: String, server: String, queue: String): List[Row] = {
-    lazy val cluster = Cluster.builder.addContactPoint("localhost").build
-    val session = cluster.connect
+  def getSent(fromDomain: String, server: String, queue: String): List[Row] = {
+    val session = getSession
 
     val statement = new BoundStatement(session.prepare("""
       select * from mailstats.SentFrom 
@@ -46,11 +45,13 @@ class DbUpdaterTest extends TestSpec {
   }
 
   def truncate(table: String) = {
-    lazy val cluster = Cluster.builder.addContactPoint("localhost").build
-    val session = cluster.connect
-
+    val session = getSession
     session.execute(s"truncate mailstats.$table")
-
     session.shutdown
   }
+  def getSession = {
+    lazy val cluster = Cluster.builder.addContactPoint("localhost").build
+     cluster.connect
+  }
 }
+
