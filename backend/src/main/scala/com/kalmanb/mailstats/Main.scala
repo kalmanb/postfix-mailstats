@@ -1,7 +1,5 @@
-package com.kalmanb.mailstats
-
-import akka.actor._
+package com.kalmanb.mailstats.backend
 
 object Main extends App {
-  val system = ActorSystem("mailstats-agent")
+
 }

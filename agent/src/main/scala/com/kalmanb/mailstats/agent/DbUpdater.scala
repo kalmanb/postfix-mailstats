@@ -2,12 +2,18 @@ package com.kalmanb.mailstats.agent
 
 import akka.actor._
 import com.datastax.driver.core._
+import scala.collection.JavaConversions._
 
 class DbUpdater extends Actor {
-  lazy val cluster = Cluster.builder.addContactPoint("localhost").build
+  val nodes = context.system.settings.config.("mailstats.agent.cassandra-nodes")
+  lazy val cluster = {
+    val builder = Cluster.builder
+    nodes foreach { node ⇒ builder.addContactPoint(node) }
+    builder.build
+  }
 
-  def receive = {                          
-    case s: SummaryData ⇒ s.sentFromDomain foreach { i =>
+  def receive = {
+    case s: SummaryData ⇒ s.sentFromDomain foreach { i ⇒
       updateSent(i._1, s.server, s.queue, i._2)
     }
   }
