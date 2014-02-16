@@ -47,25 +47,3 @@ class DbUpdater extends Actor {
   override def postStop() = cluster.shutdown
 }
 
-//case class SummaryData(
-//val server: String,
-//val queue: String,
-//val sentFromDomain: mutable.Map[String, Int],
-//val sentToDomain: mutable.Map[String, Int])
-
-/*
- *
-CREATE KEYSPACE mailstats WITH replication 
- = {'class':'SimpleStrategy', 'replication_factor':1};
-
-CREATE TABLE mailstats.SentFrom (
-  fromDomain varchar, 
-  server varchar,
-  queue varchar, 
-  time timestamp,
-  sent int,
-  PRIMARY KEY ((fromDomain,server, queue),time)
-);
-
-
-*/
